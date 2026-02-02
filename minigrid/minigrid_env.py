@@ -45,6 +45,7 @@ class MiniGridEnv(gym.Env):
         highlight: bool = True,
         tile_size: int = TILE_PIXELS,
         agent_pov: bool = False,
+        fullscreen: bool = False,
     ):
         # Initialize mission
         self.mission = mission_space.sample()
@@ -87,6 +88,7 @@ class MiniGridEnv(gym.Env):
         self.reward_range = (0, 1)
 
         self.screen_size = screen_size
+        self.fullscreen = fullscreen
         self.render_size = None
         self.window = None
         self.clock = None
@@ -748,9 +750,17 @@ class MiniGridEnv(gym.Env):
             if self.window is None:
                 pygame.init()
                 pygame.display.init()
-                self.window = pygame.display.set_mode(
-                    (self.screen_size, self.screen_size)
-                )
+                if self.fullscreen:
+                    display_info = pygame.display.Info()
+                    self.screen_size = min(display_info.current_w, display_info.current_h)
+                    self.window = pygame.display.set_mode(
+                        (display_info.current_w, display_info.current_h),
+                        pygame.FULLSCREEN
+                    )
+                else:
+                    self.window = pygame.display.set_mode(
+                        (self.screen_size, self.screen_size)
+                    )
                 pygame.display.set_caption("minigrid")
             if self.clock is None:
                 self.clock = pygame.time.Clock()
@@ -776,7 +786,14 @@ class MiniGridEnv(gym.Env):
             text_rect.y = bg.get_height() - font_size * 1.5
             font.render_to(bg, text_rect, text, size=font_size)
 
-            self.window.blit(bg, (0, 0))
+            # Center the game surface on screen (for fullscreen mode)
+            if self.fullscreen:
+                self.window.fill((0, 0, 0))  # Black background
+                window_rect = self.window.get_rect()
+                bg_rect = bg.get_rect(center=window_rect.center)
+                self.window.blit(bg, bg_rect)
+            else:
+                self.window.blit(bg, (0, 0))
             pygame.event.pump()
             self.clock.tick(self.metadata["render_fps"])
             pygame.display.flip()

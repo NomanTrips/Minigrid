@@ -63,13 +63,19 @@ class ManualControl:
             return
 
         key_to_action = {
+            # Arrow keys
             "left": Actions.left,
             "right": Actions.right,
             "up": Actions.forward,
+            # WASD controls
+            "w": Actions.forward,
+            "a": Actions.left,
+            "d": Actions.right,
+            # Other actions
             "space": Actions.toggle,
             "pageup": Actions.pickup,
             "pagedown": Actions.drop,
-            "tab": Actions.pickup,
+            "e": Actions.pickup,
             "left shift": Actions.drop,
             "enter": Actions.done,
         }
@@ -117,6 +123,11 @@ if __name__ == "__main__":
         default="640",
         help="set the resolution for pygame rendering (width and height)",
     )
+    parser.add_argument(
+        "--fullscreen",
+        action="store_true",
+        help="run in fullscreen mode",
+    )
 
     args = parser.parse_args()
 
@@ -127,6 +138,7 @@ if __name__ == "__main__":
         agent_pov=args.agent_view,
         agent_view_size=args.agent_view_size,
         screen_size=args.screen_size,
+        fullscreen=args.fullscreen,
     )
 
     # TODO: check if this can be removed
