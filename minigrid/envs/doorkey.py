@@ -91,7 +91,7 @@ class DoorKeyEnv(MiniGridEnv):
 
         # Place a door in the wall
         doorIdx = self._rand_int(1, height - 2)
-        self.put_obj(Door("yellow", is_locked=True), splitIdx, doorIdx)
+        self.put_obj(Door("pink", is_locked=True), splitIdx, doorIdx)
 
         # Place a yellow key on the left side
         self.place_obj(obj=Key("yellow"), top=(0, 0), size=(splitIdx, height))
