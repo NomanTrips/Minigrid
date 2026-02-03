@@ -184,7 +184,8 @@ class Door(WorldObj):
     def toggle(self, env, pos):
         # If the player has the right key to open the door
         if self.is_locked:
-            if isinstance(env.carrying, Key) and env.carrying.color == self.color:
+            # Accept any key (not just color-matched) for visual clarity
+            if isinstance(env.carrying, Key):
                 self.is_locked = False
                 self.is_open = True
                 return True
